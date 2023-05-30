@@ -1,0 +1,22 @@
+# EditorConfig is awesome:http://EditorConfig.org
+
+# top-most EditorConfig file
+root = true
+
+# Don't use tabs for indentation.
+[*]
+indent_style = space
+# (Please don't specify an indent_size here; that has too many unintended consequences.)
+
+[*.{fs,fsi,fsx}]
+charset = utf-8
+indent_style = space
+
+# https://fsprojects.github.io/fantomas/docs/end-users/Configuration.html
+indent_size = 2
+max_line_length = 120
+end_of_line = lf
+fsharp_max_infix_operator_expression = 40
+trim_trailing_whitespace = true
+fsharp_disable_elmish_syntax = true
+fsharp_multi_line_lambda_closing_newline = true
