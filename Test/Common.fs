@@ -13,11 +13,7 @@ module FooBar =
 
   let inline bar { bar = a } = HKT.unpack a
 
-  let inline map
-    mapFoo
-    mapBar
-    ({ foo = foo; bar = bar }: FooBar<'m1>)
-    : FooBar<'m2> =
+  let inline map mapFoo mapBar ({ foo = foo; bar = bar }: FooBar<'m1>) : FooBar<'m2> =
     { foo = HKT.map mapFoo foo
       bar = HKT.map mapBar bar }
 
@@ -36,13 +32,12 @@ module Utils =
 
 module Assert =
   open NUnit.Framework
-  let areEqual<'a> (expected: 'a) (actual: 'a) =
-    Assert.AreEqual(expected, actual)
+  let areEqual<'a> (expected: 'a) (actual: 'a) = Assert.AreEqual(expected, actual)
 
   let inline areEqualFooBar expectedFoo expectedBar fooBar =
     areEqual expectedFoo (FooBar.foo fooBar)
     areEqual expectedBar (FooBar.bar fooBar)
-  
+
 module Test =
   let inline initFooBar foo bar =
     let x: FooBar<_> = FooBar.init foo bar
