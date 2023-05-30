@@ -23,24 +23,19 @@ SOFTWARE. *)
 [<AutoOpen>]
 module HKTFs
 
-#nowarn "42"
-
-[<RequireQualifiedAccess>]
-module private Unsafe =
-  let inline retype (x: 'a) : 'b = (# "" x : 'b #)
-
-#endnowarn
-
-
 [<MeasureAnnotatedAbbreviation>]
 type HKT<'m, 'a> = obj
 
+#nowarn "42"
 [<RequireQualifiedAccess>]
 module HKT =
   type F<'m, 'a, 'ma when ('m or 'ma): (static member HKT: ('m * 'a * 'ma) -> unit)> = 'm
 
   type Identity =
     static member HKT(_: Identity * 'a * 'a) : _ = ()
+
+  type Of<'a> =
+    static member HKT(_: Of<'a> * _ * 'a) : _ = ()
 
   type Option<'t> =
     static member inline HKT(_: Option<'m> * 'a * 'ma option) : _ when F<'m, 'a, 'ma> = ()
@@ -172,6 +167,10 @@ module HKT =
 
   type To<'o> = To<'o, Identity>
 
+  [<RequireQualifiedAccess>]
+  module Unsafe =
+    let inline retype (x: 'a) : 'b = (# "" x : 'b #)
+
   let inline pack (x: 'ma) : HKT<'m, 'a> when F<'m, 'a, 'ma> = Unsafe.retype (box x)
 
   let inline unpack (hkt: HKT<'m, 'a>) : 'ma when F<'m, 'a, 'ma> = unbox hkt
@@ -182,5 +181,7 @@ module HKT =
     hkt |> unpack |> f |> pack
 
   let inline map' (f: 'ma -> 'ma) (hkt: HKT<'m, 'a>) : HKT<'m, 'a> = map f hkt
+
+#endnowarn
 
 let inline (|HKT|) hkt = HKT.unpack hkt
